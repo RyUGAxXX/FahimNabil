@@ -1,0 +1,158 @@
+#include <iostream>
+#include <map>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+map<string, pair<string, string>> accounts; // Each account entry contains a pair of (password, security question answer)
+
+// Function to add or update a password
+void addOrUpdatePassword()
+{
+    string account, password, securityQuestion, securityAnswer;
+    cout << "Enter the account name: ";
+    cin.ignore();
+    getline(cin, account);
+
+    // Check if the account exists for an update
+    auto it = accounts.find(account);
+    if (it != accounts.end())
+    {
+        cout << "Account already exists. Enter the new password: ";
+    }
+    else
+    {
+        cout << "Account does not exist. Enter the password: ";
+    }
+    getline(cin, password);
+
+    cout << "Enter a security question for this account: ";
+    getline(cin, securityQuestion);
+
+    cout << "Enter the answer to the security question: ";
+    getline(cin, securityAnswer);
+
+    accounts[account] = make_pair(password, securityAnswer);
+    cout << "Password for account '" << account << "' added/updated successfully." << endl;
+}
+
+// Function to retrieve a password
+void retrievePassword()
+{
+    string account, answer;
+    cout << "Enter the account name to retrieve the password: ";
+    cin.ignore();
+    getline(cin, account);
+
+    auto it = accounts.find(account);
+    if (it != accounts.end())
+    {
+        cout << "Security Question: " << it->second.first << endl;
+        cout << "Enter the answer to the security question: ";
+        getline(cin, answer);
+
+        if (it->second.second == answer)
+        {
+            cout << "Password for account '" << account << "' is: " << it->second.first << endl;
+        }
+        else
+        {
+            cout << "Incorrect answer. Password retrieval failed." << endl;
+        }
+    }
+    else
+    {
+        cout << "Password for account '" << account << "' not found." << endl;
+    }
+}
+
+// Function to delete a password
+void deletePassword()
+{
+    string account;
+    cout << "Enter the account name to delete the password: ";
+    cin.ignore();
+    getline(cin, account);
+    auto it = accounts.find(account);
+    if (it != accounts.end())
+    {
+        accounts.erase(it);
+        cout << "Password for account '" << account << "' deleted successfully." << endl;
+    }
+    else
+    {
+        cout << "Password for account '" << account << "' not found." << endl;
+    }
+}
+
+// Function to view all saved accounts
+void viewAllAccounts()
+{
+    if (accounts.empty())
+    {
+        cout << "No accounts found." << endl;
+    }
+    else
+    {
+        cout << "List of saved accounts:" << endl;
+        for (const auto &entry : accounts)
+        {
+            cout << entry.first << endl;
+        }
+    }
+}
+
+int main()
+{
+    int choice;
+
+    cout << "Welcome to the Password Manager!" << endl;
+
+    do
+    {
+        cout << "\nOptions:\n";
+        cout << "1. Add or Update Password\n";
+        cout << "2. Retrieve Password\n";
+        cout << "3. Delete Password\n";
+        cout << "4. View All Accounts\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice (1/2/3/4/5): ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            addOrUpdatePassword();
+            break;
+
+        case 2:
+            retrievePassword();
+            break;
+
+        case 3:
+            deletePassword();
+            break;
+
+        case 4:
+            viewAllAccounts();
+            break;
+
+        case 5:
+            char confirmExit;
+            cout << "Are you sure you want to exit? (y/n): ";
+            cin >> confirmExit;
+            if (tolower(confirmExit) == 'y')
+            {
+                cout << "Exiting Password Manager. Goodbye!" << endl;
+                return 0;
+            }
+            break;
+
+        default:
+            cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (true);
+
+    return 0;
+}
