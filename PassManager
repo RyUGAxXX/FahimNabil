@@ -48,7 +48,7 @@ void retrievePassword()
     auto it = accounts.find(account);
     if (it != accounts.end())
     {
-        cout << "Security Question: " << it->second.first << endl;
+        cout << "Security Question: " << it->second.second << endl;
         cout << "Enter the answer to the security question: ";
         getline(cin, answer);
 
